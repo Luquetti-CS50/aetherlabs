@@ -28,7 +28,7 @@ export const Contact = () => {
     <section 
       id="contact" 
       className="min-h-screen flex items-center justify-center px-6 py-20"
-      style={{ scrollMarginTop: "80px" }}
+      style={{ scrollMarginTop: "120px" }}
       aria-labelledby="contact-heading"
     >
       <div className="max-w-2xl w-full">

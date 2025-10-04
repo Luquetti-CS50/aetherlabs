@@ -11,6 +11,8 @@ const languages = [
   { code: "it", text: "Benvenuto in Aether Industries" },
   { code: "ja", text: "Aether Industriesへようこそ" },
   { code: "ko", text: "Aether Industries에 오신 것을 환영합니다" },
+  { code: "no", text: "Velkommen til Aether Industries" },
+  { code: "de-ch", text: "Willkomme bi Aether Industries" },
 ];
 
 interface HeroProps {
@@ -21,7 +23,7 @@ export const Hero = ({ onScrollStart }: HeroProps) => {
   const [currentLanguageIndex, setCurrentLanguageIndex] = useState(0);
 
   useEffect(() => {
-    const getRandomInterval = () => Math.floor(Math.random() * 10000) + 10000; // 10-20 seconds
+    const getRandomInterval = () => Math.floor(Math.random() * 5000) + 5000; // 5-10 seconds
     
     let timeoutId: NodeJS.Timeout;
     
@@ -46,7 +48,7 @@ export const Hero = ({ onScrollStart }: HeroProps) => {
   };
 
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-center px-6">
+    <section id="hero" className="relative min-h-screen flex flex-col items-center justify-center px-6">
       <div className="text-center space-y-8 max-w-4xl">
         <AnimatePresence mode="wait">
           <motion.h1
@@ -69,9 +71,12 @@ export const Hero = ({ onScrollStart }: HeroProps) => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3, duration: 0.6 }}
-          className="text-xl md:text-2xl text-muted-foreground font-light"
+          className="text-2xl md:text-3xl text-foreground font-light"
+          style={{
+            textShadow: "0 0 20px rgba(159, 155, 255, 0.4)",
+          }}
         >
-          Innovating automation with precision and intelligence.
+          Un futuro más limpio empieza con cada gota
         </motion.p>
 
         <motion.div
@@ -97,8 +102,11 @@ export const Hero = ({ onScrollStart }: HeroProps) => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1, duration: 1 }}
-        className="absolute bottom-8"
+        className="absolute bottom-20 flex flex-col items-center gap-6"
       >
+        <p className="text-lg md:text-xl text-muted-foreground font-medium tracking-wider">
+          Excelencia | Eficiencia | Potencia
+        </p>
         <button
           onClick={handleScroll}
           className="text-accent animate-bounce-slow"

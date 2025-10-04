@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import LogoAether from "@/assets/LogoAether.svg";
 
 interface NavbarProps {
   activeSection: string;
@@ -11,6 +11,7 @@ const navItems = [
   { id: "home", label: "Home" },
   { id: "about", label: "About" },
   { id: "products", label: "Products" },
+  { id: "social", label: "Social" },
   { id: "contact", label: "Contact Us" },
 ];
 
@@ -28,14 +29,16 @@ export const Navbar = ({ activeSection, onNavigate, isVisible }: NavbarProps) =>
     >
       <div className="container mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
-          <motion.h2 
-            className="text-2xl font-bold text-primary"
+          <motion.button
+            onClick={() => onNavigate("hero")}
+            className="flex items-center transition-transform duration-300 hover:scale-105"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2 }}
+            aria-label="Scroll to hero"
           >
-            Aether Industries
-          </motion.h2>
+            <img src={LogoAether} alt="Aether Industries" className="h-12 w-auto" />
+          </motion.button>
           
           <ul className="flex gap-8">
             {navItems.map((item, index) => (

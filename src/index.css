@@ -13,6 +13,8 @@ All colors MUST be HSL.
     --bg-2: 243 47% 14%;       /* #151534 - dark violet */
     --primary: 243 100% 70%;   /* #6C63FF - violet neon */
     --accent: 243 100% 82%;    /* #9F9BFF - light violet */
+    --fuchsia: 320 100% 64%;   /* #FF4DD2 - magenta/fuchsia */
+    --cyan: 180 100% 60%;      /* #33E0FF - cyan */
     --text: 240 28% 93%;       /* #E9E9F4 - near white */
     --border-subtle: 243 35% 23%; /* #2B2B55 - subtle border */
     
@@ -40,7 +42,8 @@ All colors MUST be HSL.
 
     /* Gradients */
     --gradient-radial: radial-gradient(ellipse at center, hsl(var(--bg-2)) 0%, hsl(var(--bg-1)) 100%);
-    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--accent)) 100%);
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--fuchsia)) 50%, hsl(var(--cyan)) 100%);
+    --gradient-hover: linear-gradient(135deg, hsl(var(--fuchsia)) 0%, hsl(var(--cyan)) 100%);
     
     /* Shadows */
     --glow-primary: 0 0 30px hsl(var(--primary) / 0.4);

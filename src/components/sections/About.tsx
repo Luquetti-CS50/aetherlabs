@@ -5,7 +5,7 @@ export const About = () => {
     <section 
       id="about" 
       className="min-h-screen flex items-center justify-center px-6"
-      style={{ scrollMarginTop: "80px" }}
+      style={{ scrollMarginTop: "120px" }}
       aria-labelledby="about-heading"
     >
       <div className="max-w-6xl w-full">

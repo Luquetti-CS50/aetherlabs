@@ -5,6 +5,7 @@ import { Hero } from "@/components/sections/Hero";
 import { Home } from "@/components/sections/Home";
 import { About } from "@/components/sections/About";
 import { Products } from "@/components/sections/Products";
+import { Social } from "@/components/sections/Social";
 import { Contact } from "@/components/sections/Contact";
 
 const Index = () => {
@@ -17,7 +18,7 @@ const Index = () => {
   useEffect(() => {
     const observerOptions = {
       root: null,
-      rootMargin: "-50% 0px -50% 0px",
+      rootMargin: "-40% 0px -40% 0px",
       threshold: 0,
     };
 
@@ -26,6 +27,13 @@ const Index = () => {
         if (entry.isIntersecting) {
           const sectionId = entry.target.id || "hero";
           setActiveSection(sectionId);
+          
+          // Hide navbar when back on hero
+          if (sectionId === "hero") {
+            setShowNavbar(false);
+          } else {
+            setShowNavbar(true);
+          }
           
           // Update URL hash without jumping
           if (sectionId !== "hero") {
@@ -98,10 +106,21 @@ const Index = () => {
   const handleNavigate = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
+      // Show transition for section changes
+      if (sectionId !== activeSection && activeSection !== "hero") {
+        setShowTransition(true);
+        setTimeout(() => {
+          element.scrollIntoView({ behavior: "smooth" });
+          setTimeout(() => {
+            setShowTransition(false);
+          }, 300);
+        }, 200);
+      } else {
+        element.scrollIntoView({ behavior: "smooth" });
+      }
     }
     
-    if (!hasScrolledRef.current) {
+    if (!hasScrolledRef.current && sectionId !== "hero") {
       handleScrollStart();
     }
   };
@@ -135,6 +154,7 @@ const Index = () => {
       <Home />
       <About />
       <Products />
+      <Social />
       <Contact />
     </div>
   );

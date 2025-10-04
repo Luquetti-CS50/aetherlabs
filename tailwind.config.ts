@@ -86,7 +86,7 @@ export default {
         },
         "bounce-slow": {
           "0%, 100%": { transform: "translateY(0)" },
-          "50%": { transform: "translateY(-10px)" }
+          "50%": { transform: "translateY(-5px)" }
         },
         "language-fade": {
           "0%": { opacity: "0", transform: "scale(0.95)" },
