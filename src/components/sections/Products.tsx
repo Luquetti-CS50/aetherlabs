@@ -1,119 +1,99 @@
 import { motion } from "framer-motion";
-import { Package, Wrench, Cpu, Settings, Plug, Scissors, CircleDot, Cog } from "lucide-react";
+import { Package, Flame, Cpu, Gauge, Plug, Box, Circle, Grid3x3, Cog } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
-const products = [
-  {
-    icon: Package,
-    code: "X",
-    title: "Envasado",
-    description: "Sistemas automatizados de envasado industrial de alta precisión",
-  },
-  {
-    icon: Wrench,
-    code: "R",
-    title: "Soldadura",
-    description: "Tecnología robótica avanzada para soldadura de precisión",
-  },
-  {
-    icon: Cpu,
-    code: "A",
-    title: "Brazos Robóticos",
-    description: "Brazos robóticos articulados para aplicaciones industriales complejas",
-  },
-  {
-    icon: Settings,
-    code: "S",
-    title: "Sistemas de Control",
-    description: "Sistemas inteligentes de control y automatización industrial",
-  },
-  {
-    icon: Plug,
-    code: "P",
-    title: "Periféricos",
-    description: "Equipamiento y soporte complementario para sistemas automatizados",
-  },
-  {
-    icon: Scissors,
-    code: "C",
-    title: "CNC – Corte",
-    description: "Maquinaria CNC de corte de alta precisión y velocidad",
-  },
-  {
-    icon: CircleDot,
-    code: "T",
-    title: "CNC – Torneado",
-    description: "Tornos CNC automatizados para manufactura de precisión",
-  },
-  {
-    icon: Cog,
-    code: "F",
-    title: "CNC – Fresado",
-    description: "Fresadoras CNC de última generación para mecanizado complejo",
-  },
-  {
-    icon: Settings,
-    code: "M",
-    title: "CNC – Mecanizado",
-    description: "Centros de mecanizado CNC multifuncionales de alto rendimiento",
-  },
+const productLines = [
+  { prefix: "X", icon: Package, key: "x" as const },
+  { prefix: "R", icon: Flame, key: "r" as const },
+  { prefix: "A", icon: Cpu, key: "a" as const },
+  { prefix: "S", icon: Gauge, key: "s" as const },
+  { prefix: "P", icon: Plug, key: "p" as const },
+  { prefix: "C", icon: Box, key: "c" as const },
+  { prefix: "T", icon: Circle, key: "t" as const },
+  { prefix: "F", icon: Grid3x3, key: "f" as const },
+  { prefix: "M", icon: Cog, key: "m" as const },
 ];
 
 export const Products = () => {
+  const { t } = useLanguage();
+
   return (
-    <section 
-      id="products" 
+    <section
+      id="products"
       className="min-h-screen flex items-center justify-center px-6 py-20"
       style={{ scrollMarginTop: "120px" }}
       aria-labelledby="products-heading"
     >
-      <div className="max-w-6xl w-full">
-        <motion.h2
+      <div className="container mx-auto max-w-7xl">
+        <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, amount: 0.2 }}
           transition={{ duration: 0.6 }}
-          id="products-heading"
-          className="text-5xl font-bold text-center mb-16 text-foreground"
-          style={{ textShadow: "0 0 30px rgba(108, 99, 255, 0.4)" }}
+          className="space-y-12"
         >
-          Our Products
-        </motion.h2>
+          <div className="text-center space-y-4">
+            <h2 id="products-heading" className="text-5xl font-bold text-primary">
+              {t.products.title}
+            </h2>
+            <p className="text-xl text-muted-foreground">
+              {t.products.subtitle}
+            </p>
+          </div>
 
-        <div className="grid md:grid-cols-3 gap-6">
-          {products.map((product, index) => {
-            const Icon = product.icon;
-            return (
-              <motion.div
-                key={product.title}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: index * 0.08 }}
-                className="glass rounded-2xl p-6 hover:scale-103 transition-all duration-300
-                         hover:shadow-[0_0_40px_rgba(255,77,210,0.4)] cursor-pointer group"
-              >
-                <div className="flex flex-col items-center text-center gap-4">
-                  <div className="relative">
-                    <div className="p-4 rounded-xl bg-primary/10 group-hover:bg-gradient-to-br group-hover:from-primary group-hover:via-fuchsia group-hover:to-cyan transition-all">
-                      <Icon className="w-10 h-10 text-primary group-hover:text-white transition-colors" />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {productLines.map((product, index) => {
+              const Icon = product.icon;
+              const lineData = t.products.lines[product.key];
+
+              return (
+                <motion.div
+                  key={product.prefix}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.4, delay: index * 0.1 }}
+                  className="glass rounded-2xl p-8 text-center space-y-4
+                           hover:scale-105 transition-all duration-300 group
+                           hover:shadow-[0_0_30px_rgba(41,255,237,0.3)]"
+                >
+                  <div className="flex flex-col items-center gap-4">
+                    <div className="relative">
+                      <div 
+                        className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                        style={{
+                          background: "var(--gradient-primary)",
+                          filter: "blur(20px)",
+                        }}
+                      />
+                      <div className="relative z-10 w-20 h-20 rounded-full glass flex items-center justify-center">
+                        <Icon className="w-10 h-10 text-primary" />
+                      </div>
                     </div>
-                    <span className="absolute -top-2 -right-2 w-8 h-8 rounded-full bg-gradient-to-br from-fuchsia to-cyan flex items-center justify-center text-xs font-bold text-white">
-                      {product.code}
-                    </span>
+
+                    <div className="text-4xl font-bold" style={{
+                      background: "var(--gradient-primary)",
+                      WebkitBackgroundClip: "text",
+                      WebkitTextFillColor: "transparent",
+                      backgroundClip: "text",
+                    }}>
+                      {product.prefix}
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="text-xl font-semibold text-foreground mb-2 group-hover:text-primary transition-colors">
-                      {product.title}
+
+                  <div className="space-y-2">
+                    <h3 className="text-xl font-bold text-foreground">
+                      {lineData.name}
                     </h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed">
-                      {product.description}
+                    <p className="text-lg text-muted-foreground">
+                      {lineData.type}
                     </p>
                   </div>
-                </div>
-              </motion.div>
-            );
-          })}
-        </div>
+                </motion.div>
+              );
+            })}
+          </div>
+        </motion.div>
       </div>
     </section>
   );

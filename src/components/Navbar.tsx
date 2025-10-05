@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { useLanguage } from "@/contexts/LanguageContext";
 import LogoAether from "@/assets/LogoAether.svg";
 
 interface NavbarProps {
@@ -7,15 +8,15 @@ interface NavbarProps {
   isVisible: boolean;
 }
 
-const navItems = [
-  { id: "home", label: "Home" },
-  { id: "about", label: "About" },
-  { id: "products", label: "Products" },
-  { id: "social", label: "Social" },
-  { id: "contact", label: "Contact Us" },
-];
-
 export const Navbar = ({ activeSection, onNavigate, isVisible }: NavbarProps) => {
+  const { t } = useLanguage();
+  
+  const navItems = [
+    { id: "home", label: t.nav.home },
+    { id: "about", label: t.nav.about },
+    { id: "products", label: t.nav.products },
+    { id: "contact", label: t.nav.contact },
+  ];
   return (
     <motion.nav
       initial={{ y: -100, opacity: 0 }}

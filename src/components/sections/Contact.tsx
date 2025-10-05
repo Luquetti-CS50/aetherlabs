@@ -1,118 +1,162 @@
-import { motion } from "framer-motion";
 import { useState } from "react";
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { toast } from "sonner";
+import { useToast } from "@/hooks/use-toast";
+import { Instagram, Twitter, Youtube } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export const Contact = () => {
+  const { t } = useLanguage();
+  const { toast } = useToast();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     message: "",
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!formData.name || !formData.email || !formData.message) {
-      toast.error("Please fill in all fields");
+      toast({
+        title: t.contact.form.error,
+        variant: "destructive",
+      });
       return;
     }
 
-    toast.success("Message sent! We'll get back to you soon.");
-    setFormData({ name: "", email: "", message: "" });
+    setIsSubmitting(true);
+    
+    setTimeout(() => {
+      toast({
+        title: t.contact.form.success,
+      });
+      setFormData({ name: "", email: "", message: "" });
+      setIsSubmitting(false);
+    }, 1000);
   };
 
+  const socialLinks = [
+    { icon: Instagram, handle: "@AetherGlobal" },
+    { icon: Twitter, handle: "@Aether Global" },
+    { icon: Youtube, handle: "Aether Industries" },
+  ];
+
   return (
-    <section 
-      id="contact" 
+    <section
+      id="contact"
       className="min-h-screen flex items-center justify-center px-6 py-20"
       style={{ scrollMarginTop: "120px" }}
       aria-labelledby="contact-heading"
     >
-      <div className="max-w-2xl w-full">
-        <motion.h2
+      <div className="container mx-auto max-w-4xl">
+        <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.6 }}
-          id="contact-heading"
-          className="text-5xl font-bold text-center mb-4 text-foreground"
-          style={{ textShadow: "0 0 30px rgba(108, 99, 255, 0.4)" }}
+          className="glass rounded-2xl p-12 space-y-12"
         >
-          Contact Us
-        </motion.h2>
-
-        <motion.p
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="text-center text-muted-foreground mb-12"
-        >
-          Get in touch with our team to discuss how Aether Industries can transform your business.
-        </motion.p>
-
-        <motion.form
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          onSubmit={handleSubmit}
-          className="glass rounded-2xl p-8 space-y-6"
-        >
-          <div>
-            <label htmlFor="name" className="block text-sm font-medium text-foreground mb-2">
-              Name
-            </label>
-            <Input
-              id="name"
-              type="text"
-              value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              className="bg-background/50 border-border text-foreground"
-              placeholder="Your name"
-            />
+          <div className="text-center space-y-4">
+            <h2 id="contact-heading" className="text-5xl font-bold text-primary">
+              {t.contact.title}
+            </h2>
+            <p className="text-xl text-muted-foreground">
+              {t.contact.subtitle}
+            </p>
           </div>
 
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium text-foreground mb-2">
-              Email
-            </label>
-            <Input
-              id="email"
-              type="email"
-              value={formData.email}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              className="bg-background/50 border-border text-foreground"
-              placeholder="your@email.com"
-            />
-          </div>
+          <div className="space-y-8">
+            <div className="text-center space-y-6">
+              <h3 className="text-2xl font-bold" style={{
+                background: "var(--gradient-primary)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+              }}>
+                {t.contact.social}
+              </h3>
+              
+              <div className="flex justify-center gap-8">
+                {socialLinks.map((social, index) => {
+                  const Icon = social.icon;
+                  return (
+                    <motion.a
+                      key={index}
+                      href="#"
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: index * 0.1 }}
+                      className="group flex flex-col items-center gap-2"
+                      aria-label={social.handle}
+                    >
+                      <div className="relative">
+                        <div 
+                          className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                          style={{
+                            background: "var(--gradient-primary)",
+                            filter: "blur(15px)",
+                          }}
+                        />
+                        <div className="relative z-10 w-16 h-16 rounded-full glass flex items-center justify-center
+                                      group-hover:scale-110 transition-transform duration-300">
+                          <Icon 
+                            className="w-8 h-8 text-muted-foreground group-hover:text-foreground transition-colors" 
+                          />
+                        </div>
+                      </div>
+                      <span className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">
+                        {social.handle}
+                      </span>
+                    </motion.a>
+                  );
+                })}
+              </div>
+            </div>
 
-          <div>
-            <label htmlFor="message" className="block text-sm font-medium text-foreground mb-2">
-              Message
-            </label>
-            <Textarea
-              id="message"
-              value={formData.message}
-              onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-              className="bg-background/50 border-border text-foreground min-h-[150px]"
-              placeholder="Tell us about your project..."
-            />
-          </div>
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <Input
+                placeholder={t.contact.form.name}
+                value={formData.name}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                className="glass border-border text-foreground"
+              />
 
-          <Button
-            type="submit"
-            className="w-full text-lg font-medium py-6 rounded-xl
-                     bg-gradient-to-r from-primary to-accent
-                     hover:scale-103 transition-all duration-300
-                     hover:shadow-[0_0_30px_rgba(108,99,255,0.5)]"
-          >
-            Send Message
-          </Button>
-        </motion.form>
+              <Input
+                type="email"
+                placeholder={t.contact.form.email}
+                value={formData.email}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                className="glass border-border text-foreground"
+              />
+
+              <Textarea
+                placeholder={t.contact.form.message}
+                value={formData.message}
+                onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                className="glass border-border text-foreground min-h-32"
+              />
+
+              <Button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full text-lg font-medium py-6 relative overflow-hidden group"
+                style={{
+                  background: "var(--gradient-button)",
+                  color: "white",
+                }}
+              >
+                <span className="relative z-10">
+                  {isSubmitting ? t.contact.form.sending : t.contact.form.send}
+                </span>
+              </Button>
+            </form>
+          </div>
+        </motion.div>
       </div>
     </section>
   );

@@ -1,67 +1,82 @@
 import { motion } from "framer-motion";
+import { LogoSlider } from "@/components/LogoSlider";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export const About = () => {
+  const { t } = useLanguage();
+
   return (
-    <section 
-      id="about" 
-      className="min-h-screen flex items-center justify-center px-6"
+    <section
+      id="about"
+      className="min-h-screen flex items-center justify-center px-6 py-20"
       style={{ scrollMarginTop: "120px" }}
       aria-labelledby="about-heading"
     >
-      <div className="max-w-6xl w-full">
-        <motion.h2
+      <div className="container mx-auto max-w-6xl">
+        <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.6 }}
-          id="about-heading"
-          className="text-5xl font-bold text-center mb-16 text-foreground"
-          style={{ textShadow: "0 0 30px rgba(108, 99, 255, 0.4)" }}
+          className="space-y-12"
         >
-          About Section
-        </motion.h2>
-
-        <div className="grid md:grid-cols-2 gap-12 items-center">
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="glass rounded-2xl p-8 space-y-4"
-          >
-            <h3 className="text-2xl font-semibold text-primary">Our Mission</h3>
-            <p className="text-muted-foreground leading-relaxed">
-              At Aether Industries, we believe in the power of intelligent automation
-              to reshape the world. Our mission is to develop sophisticated systems
-              that blend precision engineering with artificial intelligence.
-            </p>
-            <p className="text-muted-foreground leading-relaxed">
-              We are committed to innovation, sustainability, and creating technology
-              that empowers businesses to reach new heights of efficiency and creativity.
-            </p>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            className="flex justify-center"
-          >
-            <div 
-              className="w-64 h-64 rounded-full glass flex items-center justify-center
-                         hover:scale-105 transition-transform duration-300"
-              style={{
-                boxShadow: "0 0 60px rgba(108, 99, 255, 0.5), inset 0 0 40px rgba(159, 155, 255, 0.2)",
-              }}
-            >
-              <div className="text-center">
-                <p className="text-6xl font-bold text-primary animate-glow-pulse">AI</p>
-                <p className="text-sm text-accent mt-2 uppercase tracking-wider">Powered</p>
-              </div>
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            <div className="glass rounded-2xl p-8 space-y-4">
+              <h2 id="about-heading" className="text-4xl font-bold text-primary">
+                {t.about.title}
+              </h2>
+              <h3 className="text-2xl font-semibold" style={{
+                background: "var(--gradient-primary)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+              }}>
+                {t.about.subtitle}
+              </h3>
+              <p className="text-lg text-muted-foreground leading-relaxed">
+                {t.about.description}
+              </p>
             </div>
-          </motion.div>
-        </div>
+
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="flex items-center justify-center"
+            >
+              <div className="relative w-64 h-64 rounded-full glass glow-primary flex items-center justify-center">
+                <div 
+                  className="absolute inset-4 rounded-full"
+                  style={{
+                    background: "var(--gradient-primary)",
+                    filter: "blur(20px)",
+                  }}
+                />
+                <div className="relative z-10 text-6xl font-bold" style={{
+                  background: "var(--gradient-primary)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                }}>
+                  AI
+                </div>
+              </div>
+            </motion.div>
+          </div>
+
+          <div className="glass rounded-2xl p-8 space-y-6">
+            <h3 className="text-2xl font-bold text-center" style={{
+              background: "var(--gradient-primary)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
+            }}>
+              {t.about.partners}
+            </h3>
+            <LogoSlider />
+          </div>
+        </motion.div>
       </div>
     </section>
   );
