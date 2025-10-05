@@ -1,20 +1,22 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/contexts/LanguageContext";
-
-const languages = ["en", "es", "fr", "pt", "de", "it", "ja", "ko", "no", "de-ch"] as const;
+import { HorizontalLanguageSelector } from "@/components/HorizontalLanguageSelector";
+import { languages } from "@/lib/translations";
 
 export const Hero = () => {
   const { t } = useLanguage();
   const [currentLanguageIndex, setCurrentLanguageIndex] = useState(0);
+  const [isAutoRotating, setIsAutoRotating] = useState(true);
+  const timeoutRef = useRef<NodeJS.Timeout>();
 
   useEffect(() => {
-    const getRandomInterval = () => Math.floor(Math.random() * 5000) + 5000; // 5-10 seconds
-    
-    let timeoutId: NodeJS.Timeout;
-    
+    if (!isAutoRotating) return;
+
+    const getRandomInterval = () => Math.floor(Math.random() * 5000) + 5000;
+
     const scheduleNextChange = () => {
-      timeoutId = setTimeout(() => {
+      timeoutRef.current = setTimeout(() => {
         setCurrentLanguageIndex((prev) => (prev + 1) % languages.length);
         scheduleNextChange();
       }, getRandomInterval());
@@ -22,11 +24,28 @@ export const Hero = () => {
 
     scheduleNextChange();
 
-    return () => clearTimeout(timeoutId);
-  }, []);
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, [isAutoRotating]);
+
+  const handleUserInteraction = () => {
+    setIsAutoRotating(false);
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+  };
 
   return (
     <section id="hero" className="relative min-h-screen flex flex-col items-center justify-center px-6">
+      <div className="absolute top-8 left-1/2 -translate-x-1/2 w-full px-6 flex justify-center">
+        <HorizontalLanguageSelector
+          onUserInteraction={handleUserInteraction}
+          autoRotateIndex={isAutoRotating ? currentLanguageIndex : undefined}
+        />
+      </div>
       <div className="text-center space-y-8 max-w-4xl">
         <AnimatePresence mode="wait">
           <motion.h1
