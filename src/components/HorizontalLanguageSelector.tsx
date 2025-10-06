@@ -27,8 +27,8 @@ export const HorizontalLanguageSelector = ({
 
   // map context lang -> current index
   useEffect(() => {
-    const currentIndex = languages.findIndex((l) => l.code === language);
-    if (currentIndex >= 0) setCenterIndex(currentIndex);
+    const idx = languages.findIndex((l) => l.code === language);
+    if (idx >= 0) setCenterIndex(idx);
   }, [language]);
 
   // autorotate hasta interacción / primera salida
@@ -56,9 +56,7 @@ export const HorizontalLanguageSelector = ({
   };
 
   // ====== Tuning visual ======
-  // Distancia horizontal constante entre items:
-  const GAP = Math.max(120, Math.min(vw * 0.18, 240)); // 120–240px aprox; ~18% vw
-  // Ventana de visibilidad plena (~60% de la pantalla)
+  const GAP = Math.max(120, Math.min(vw * 0.16, 220)); // 120–220px aprox.
   const FADE_WINDOW = vw * 0.60;
   const HALF_WIN = FADE_WINDOW / 2;
 
@@ -66,33 +64,34 @@ export const HorizontalLanguageSelector = ({
   const SCALE_SIDE_MIN = 0.90;
   const OPACITY_MIN = 0.35;
 
-  // Para loop infinito: extendemos el array 3x
+  const SIDE_COUNT = 3; // 3 por lado visible
+
+  // Loop infinito con array extendido
   const N = languages.length;
   const extended = [...languages, ...languages, ...languages];
-  // El “centro” real está en el bloque del medio
-  const base = N; // offset de inicio del bloque central
-  const current = base + centerIndex; // índice absoluto dentro de `extended`
+  const base = N; // bloque central
+  const current = base + centerIndex;
 
-  // Mostramos una ventana alrededor del centro
-  const SIDE_COUNT = 3; // 3 por lado (total ~7 visibles)
-  const start = Math.max(0, current - SIDE_COUNT - 4);
-  const end = Math.min(extended.length - 1, current + SIDE_COUNT + 4);
+  // Ventana de render alrededor del centro (evita renderizar todo)
+  const start = Math.max(0, current - (SIDE_COUNT + 6));
+  const end = Math.min(extended.length - 1, current + (SIDE_COUNT + 6));
+  const count = end - start + 1;
 
-  // La pista (track) se mueve como bloque; cada item queda fijo en su “posición absoluta”
+  // posicionar la pista para que el item "current" quede en el centro del viewport
   const trackX = (vw / 2) - (current * GAP);
 
-  // Cálculo visual por ítem (en base a distancia al centro)
   const getItemVisual = (absIndex: number) => {
-    const delta = absIndex - current;            // en cantidad de pasos
-    const pixelDist = Math.abs(delta * GAP);     // distancia real en px
-    const dNorm = Math.min(1, pixelDist / HALF_WIN); // 0 centro → 1 borde ventana
+    const delta = absIndex - current;
+    const pixelDist = Math.abs(delta * GAP);
+    const dNorm = Math.min(1, pixelDist / HALF_WIN);
 
-    const opacity = 1 - (1 - OPACITY_MIN) * dNorm;                 // 1 → 0.35
-    const scale = SCALE_ACTIVE - (SCALE_ACTIVE - SCALE_SIDE_MIN) * dNorm; // 1.16 → 0.90
-    const blurPx = 0.5 + 1.5 * dNorm;                               // leve blur lateral
+    const opacity = 1 - (1 - OPACITY_MIN) * dNorm;
+    const scale = SCALE_ACTIVE - (SCALE_ACTIVE - SCALE_SIDE_MIN) * dNorm;
+    const blurPx = 0.4 + 1.4 * dNorm;
 
     const isCentered = delta === 0;
-    return { opacity, scale, blurPx, isCentered, x: absIndex * GAP };
+    const x = absIndex * GAP;
+    return { opacity, scale, blurPx, isCentered, x };
   };
 
   const onItemClick = (absIndex: number) => {
@@ -100,51 +99,56 @@ export const HorizontalLanguageSelector = ({
     handleLanguageChange(logicalIndex);
   };
 
+  // --- visibilidad/máscara ---
+  const USE_MASK = false; // poné true si querés el fade por máscara en los bordes
+  const maskStyles = USE_MASK
+    ? {
+        WebkitMaskImage:
+          "linear-gradient(to right, transparent 0%, black 20%, black 80%, transparent 100%)",
+        maskImage:
+          "linear-gradient(to right, transparent 0%, black 20%, black 80%, transparent 100%)",
+      }
+    : {};
+
+  // Glow doble
+  const glow = "0 0 14px rgba(255,255,255,0.38), 0 0 28px rgba(255,255,255,0.22)";
+  // Si querés paleta:
+  // const glow = "0 0 14px rgba(41,255,237,.45), 0 0 26px rgba(254,76,251,.30)";
+
   return (
-    <div className="relative w-full">
+    <div className="relative w-full z-10"> {/* z para evitar que algo lo tape */}
       <div
         ref={viewportRef}
         onWheel={handleWheel}
         className="relative mx-auto h-20 flex items-center justify-center overflow-hidden"
         style={{
-          // máscara: centro opaco del 20% al 80% (≈60% visible pleno)
-          WebkitMaskImage: "linear-gradient(to right, transparent 0%, black 20%, black 80%, transparent 100%)",
-          maskImage: "linear-gradient(to right, transparent 0%, black 20%, black 80%, transparent 100%)",
+          ...maskStyles,
           maxWidth: "min(1200px, 92vw)"
         }}
         aria-label="Language selector"
       >
-        {/* TRACK que se mueve como bloque */}
+        {/* TRACK */}
         <motion.div
           className="relative h-full"
           animate={{ x: trackX }}
-          transition={{ duration: 0.36, ease: "easeOut" }}
-          style={{ width: (extended.length * GAP) + "px" }}
+          transition={{ duration: 0.3, ease: "easeOut" }}
+          style={{ width: count * GAP }}
         >
           {extended.slice(start, end + 1).map((lang, i) => {
             const absIndex = start + i;
             const { opacity, scale, blurPx, isCentered, x } = getItemVisual(absIndex);
-
-            // Glow doble, sin corte
-            const glow =
-              "0 0 14px rgba(255,255,255,0.38), 0 0 28px rgba(255,255,255,0.22)";
-
             return (
               <motion.button
                 key={`${lang.code}-${absIndex}`}
-                className={`absolute top-1/2 -translate-y-1/2 text-foreground font-medium whitespace-nowrap cursor-pointer ${
+                className={`absolute top-1/2 -translate-y-1/2 whitespace-nowrap cursor-pointer ${
                   isCentered ? "text-3xl md:text-4xl font-semibold" : "text-xl md:text-2xl"
-                }`}
+                } text-white`} // <- color explícito
                 onClick={() => onItemClick(absIndex)}
-                animate={{
-                  opacity,
-                  scale,
-                  filter: `blur(${blurPx}px)`
-                }}
-                transition={{ duration: 0.28, ease: "easeOut" }}
+                animate={{ opacity, scale, filter: `blur(${blurPx}px)` }}
+                transition={{ duration: 0.24, ease: "easeOut" }}
                 style={{
                   left: 0,
-                  transform: `translate(${x}px, -50%)`, // posición absoluta en la pista
+                  transform: `translate(${x - start * GAP}px, -50%)`, // posición relativa a la ventana slice
                   textShadow: isCentered ? glow : "none",
                   willChange: "transform, opacity, filter"
                 }}
