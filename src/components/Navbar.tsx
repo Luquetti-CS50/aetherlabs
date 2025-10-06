@@ -28,7 +28,7 @@ export const Navbar = ({ activeSection, onNavigate, isVisible }: NavbarProps) =>
         backdropFilter: "blur(20px)",
       }}
     >
-      <div className="container mx-auto px-6 py-4">
+      <div className="container mx-auto px-3 md:px-6 py-2 md:py-4">
         <div className="flex items-center justify-between">
           <motion.button
             onClick={() => onNavigate("hero")}
@@ -38,10 +38,10 @@ export const Navbar = ({ activeSection, onNavigate, isVisible }: NavbarProps) =>
             transition={{ delay: 0.2 }}
             aria-label="Scroll to hero"
           >
-            <img src={LogoAether} alt="Aether Industries" className="h-12 w-auto" />
+            <img src={LogoAether} alt="Aether Industries" className="h-8 md:h-10 lg:h-12 w-auto" />
           </motion.button>
           
-          <ul className="flex gap-8">
+          <ul className="flex gap-3 md:gap-6 lg:gap-8">
             {navItems.map((item, index) => (
               <motion.li
                 key={item.id}
@@ -52,7 +52,7 @@ export const Navbar = ({ activeSection, onNavigate, isVisible }: NavbarProps) =>
                 <button
                   onClick={() => onNavigate(item.id)}
                   className={`
-                    relative text-lg font-medium transition-all duration-300
+                    relative text-sm md:text-base lg:text-lg font-medium transition-all duration-300
                     hover:text-primary hover:scale-103
                     ${activeSection === item.id ? "text-primary" : "text-foreground"}
                   `}

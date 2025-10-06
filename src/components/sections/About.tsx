@@ -53,14 +53,25 @@ export const About = () => {
                     filter: "blur(20px)",
                   }}
                 />
-                <div className="relative z-10 text-6xl font-bold" style={{
-                  background: "var(--gradient-primary)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  backgroundClip: "text",
-                }}>
-                  AI
-                </div>
+                <svg 
+                  viewBox="0 0 100 120" 
+                  className="relative z-10 w-32 h-40"
+                  style={{ filter: "drop-shadow(0 0 8px hsl(var(--primary)))" }}
+                >
+                  <defs>
+                    <linearGradient id="dropletGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                      <stop offset="0%" style={{ stopColor: "hsl(180, 100%, 50%)", stopOpacity: 1 }} />
+                      <stop offset="100%" style={{ stopColor: "hsl(280, 100%, 50%)", stopOpacity: 1 }} />
+                    </linearGradient>
+                  </defs>
+                  <path 
+                    d="M 50 10 Q 30 30 20 50 Q 15 65 20 75 Q 25 85 35 92 Q 45 98 50 100 Q 55 98 65 92 Q 75 85 80 75 Q 85 65 80 50 Q 70 30 50 10 Z" 
+                    fill="url(#dropletGradient)"
+                    stroke="hsl(var(--primary))"
+                    strokeWidth="1"
+                  />
+                  <ellipse cx="42" cy="45" rx="8" ry="12" fill="rgba(255,255,255,0.3)" />
+                </svg>
               </div>
             </motion.div>
           </div>

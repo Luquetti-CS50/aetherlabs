@@ -58,20 +58,20 @@ export const Contact = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.6 }}
-          className="glass rounded-2xl p-12 space-y-12"
+          className="glass rounded-2xl p-6 md:p-10 lg:p-12 space-y-8 md:space-y-10 lg:space-y-12"
         >
           <div className="text-center space-y-4">
-            <h2 id="contact-heading" className="text-5xl font-bold text-primary">
+            <h2 id="contact-heading" className="text-3xl md:text-4xl lg:text-5xl font-bold text-primary">
               {t.contact.title}
             </h2>
-            <p className="text-xl text-muted-foreground">
+            <p className="text-base md:text-lg lg:text-xl text-muted-foreground">
               {t.contact.subtitle}
             </p>
           </div>
 
-          <div className="space-y-8">
-            <div className="text-center space-y-6">
-              <h3 className="text-2xl font-bold" style={{
+          <div className="space-y-6 md:space-y-8">
+            <div className="text-center space-y-4 md:space-y-6">
+              <h3 className="text-xl md:text-2xl font-bold" style={{
                 background: "var(--gradient-primary)",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
@@ -80,7 +80,7 @@ export const Contact = () => {
                 {t.contact.social}
               </h3>
               
-              <div className="flex justify-center gap-8">
+              <div className="flex justify-center gap-4 md:gap-6 lg:gap-8">
                 {socialLinks.map((social, index) => {
                   const Icon = social.icon;
                   return (
@@ -102,14 +102,14 @@ export const Contact = () => {
                             filter: "blur(15px)",
                           }}
                         />
-                        <div className="relative z-10 w-16 h-16 rounded-full glass flex items-center justify-center
+                        <div className="relative z-10 w-12 h-12 md:w-14 md:h-14 lg:w-16 lg:h-16 rounded-full glass flex items-center justify-center
                                       group-hover:scale-110 transition-transform duration-300">
                           <Icon 
-                            className="w-8 h-8 text-muted-foreground group-hover:text-foreground transition-colors" 
+                            className="w-6 h-6 md:w-7 md:h-7 lg:w-8 lg:h-8 text-muted-foreground group-hover:text-foreground transition-colors" 
                           />
                         </div>
                       </div>
-                      <span className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">
+                      <span className="text-xs md:text-sm text-muted-foreground group-hover:text-foreground transition-colors">
                         {social.handle}
                       </span>
                     </motion.a>

@@ -27,15 +27,15 @@ export const translations = {
       contact: "Contact Us",
     },
     home: {
-      title: "Home Block",
+      title: "Welcome",
       description:
-        "Welcome to the heart of Aether Industries. We are pioneering the future of automation technology with cutting-edge solutions that transform industries and elevate human potential.",
+        "At Aether Industries, we are pioneering the future of automation technology with cutting-edge solutions that transform industries and elevate human potential.",
     },
     about: {
       title: "About Section",
       subtitle: "Innovation Meets Precision",
       description:
-        "At Aether Industries, we combine decades of engineering expertise with cutting-edge automation technology. Our mission is to revolutionize industrial processes through intelligent solutions that enhance productivity, safety, and sustainability.",
+        "Aether Industries was founded on December 27, 2005, as a company that manufactured water packaging machines. During the development process of the most advanced models, the addition of our first partners gave us the possibility to plan the first models of customized packaging machines for clients who might need a capacity superior to that of our mass-produced models. From a certain point, we began to automate our assembly line with machinery developed by us until we were able to commercialize said machinery at more affordable prices than the competition.",
       partners: "Our Partners",
     },
     products: {
@@ -81,15 +81,15 @@ export const translations = {
       contact: "Contacto",
     },
     home: {
-      title: "Bloque Principal",
+      title: "Bienvenido",
       description:
-        "Bienvenido al corazón de Aether Industries. Estamos siendo pioneros en el futuro de la tecnología de automatización con soluciones de vanguardia que transforman industrias y elevan el potencial humano.",
+        "En Aether Industries estamos siendo pioneros en el futuro de la tecnología de automatización con soluciones de vanguardia que transforman industrias y elevan el potencial humano.",
     },
     about: {
       title: "Acerca de Nosotros",
       subtitle: "La Innovación Encuentra la Precisión",
       description:
-        "En Aether Industries, combinamos décadas de experiencia en ingeniería con tecnología de automatización de vanguardia. Nuestra misión es revolucionar los procesos industriales a través de soluciones inteligentes que mejoran la productividad, seguridad y sostenibilidad.",
+        "Aether Industries se fundó el 27 de diciembre de 2005 como una empresa que manufacturaba envasadoras de agua, durante el proceso de desarrollo de los modelos más avanzados, la adhesión de nuestros primeros socios nos dio la posibilidad de planificar los primeros modelos de envasadoras personalizadas para los clientes que pudieran necesitar una capacidad superior que la de nuestros modelos producidos en masa, a partir de cierto punto, empezamos a automatizar nuestra línea de ensamblaje con maquinaria desarrollada por nosotros hasta llegar a poder comercializar dicha maquinaria a precios más asequibles que los de la competencia.",
       partners: "Nuestros Socios",
     },
     products: {
@@ -135,15 +135,15 @@ export const translations = {
       contact: "Contact",
     },
     home: {
-      title: "Bloc Principal",
+      title: "Bienvenue",
       description:
-        "Bienvenue au cœur d'Aether Industries. Nous sommes pionniers de l'avenir de la technologie d'automatisation avec des solutions de pointe qui transforment les industries et élèvent le potentiel humain.",
+        "Chez Aether Industries, nous sommes pionniers de l'avenir de la technologie d'automatisation avec des solutions de pointe qui transforment les industries et élèvent le potentiel humain.",
     },
     about: {
       title: "À Propos de Nous",
       subtitle: "L'Innovation Rencontre la Précision",
       description:
-        "Chez Aether Industries, nous combinons des décennies d'expertise en ingénierie avec une technologie d'automatisation de pointe. Notre mission est de révolutionner les processus industriels grâce à des solutions intelligentes qui améliorent la productivité, la sécurité et la durabilité.",
+        "Aether Industries a été fondée le 27 décembre 2005 en tant qu'entreprise qui fabriquait des machines d'emballage d'eau. Au cours du processus de développement des modèles les plus avancés, l'adhésion de nos premiers partenaires nous a donné la possibilité de planifier les premiers modèles de machines d'emballage personnalisées pour les clients qui pourraient avoir besoin d'une capacité supérieure à celle de nos modèles produits en masse. À partir d'un certain point, nous avons commencé à automatiser notre ligne d'assemblage avec des machines développées par nous-mêmes jusqu'à ce que nous soyons en mesure de commercialiser ces machines à des prix plus abordables que ceux de la concurrence.",
       partners: "Nos Partenaires",
     },
     products: {
@@ -189,15 +189,15 @@ export const translations = {
       contact: "Contato",
     },
     home: {
-      title: "Bloco Principal",
+      title: "Bem-vindo",
       description:
-        "Bem-vindo ao coração da Aether Industries. Estamos sendo pioneiros no futuro da tecnologia de automação com soluções de ponta que transformam indústrias e elevam o potencial humano.",
+        "Na Aether Industries, estamos sendo pioneiros no futuro da tecnologia de automação com soluções de ponta que transformam indústrias e elevam o potencial humano.",
     },
     about: {
       title: "Sobre Nós",
       subtitle: "A Inovação Encontra a Precisão",
       description:
-        "Na Aether Industries, combinamos décadas de experiência em engenharia com tecnologia de automação de ponta. Nossa missão é revolucionar os processos industriais através de soluções inteligentes que melhoram a produtividade, segurança e sustentabilidade.",
+        "A Aether Industries foi fundada em 27 de dezembro de 2005 como uma empresa que fabricava máquinas de embalagem de água. Durante o processo de desenvolvimento dos modelos mais avançados, a adesão de nossos primeiros parceiros nos deu a possibilidade de planejar os primeiros modelos de máquinas de embalagem personalizadas para clientes que pudessem precisar de uma capacidade superior à de nossos modelos produzidos em massa. A partir de certo ponto, começamos a automatizar nossa linha de montagem com maquinário desenvolvido por nós até conseguirmos comercializar esse maquinário a preços mais acessíveis do que os da concorrência.",
       partners: "Nossos Parceiros",
     },
     products: {
@@ -243,15 +243,15 @@ export const translations = {
       contact: "Kontakt",
     },
     home: {
-      title: "Hauptblock",
+      title: "Willkommen",
       description:
-        "Willkommen im Herzen von Aether Industries. Wir sind Pioniere der Zukunft der Automatisierungstechnologie mit modernsten Lösungen, die Industrien transformieren und menschliches Potenzial erhöhen.",
+        "Bei Aether Industries sind wir Pioniere der Zukunft der Automatisierungstechnologie mit modernsten Lösungen, die Industrien transformieren und menschliches Potenzial erhöhen.",
     },
     about: {
       title: "Über Uns",
       subtitle: "Innovation Trifft Präzision",
       description:
-        "Bei Aether Industries kombinieren wir jahrzehntelange Ingenieurkompetenz mit modernster Automatisierungstechnologie. Unsere Mission ist es, industrielle Prozesse durch intelligente Lösungen zu revolutionieren, die Produktivität, Sicherheit und Nachhaltigkeit verbessern.",
+        "Aether Industries wurde am 27. Dezember 2005 als Unternehmen gegründet, das Wasserverpackungsmaschinen herstellte. Während des Entwicklungsprozesses der fortschrittlichsten Modelle gab uns der Beitritt unserer ersten Partner die Möglichkeit, die ersten Modelle kundenspezifischer Verpackungsmaschinen für Kunden zu planen, die möglicherweise eine höhere Kapazität als unsere in Massenproduktion hergestellten Modelle benötigen. Ab einem bestimmten Punkt begannen wir, unsere Montagelinie mit von uns entwickelten Maschinen zu automatisieren, bis wir in der Lage waren, diese Maschinen zu günstigeren Preisen als die Konkurrenz zu vermarkten.",
       partners: "Unsere Partner",
     },
     products: {
@@ -297,15 +297,15 @@ export const translations = {
       contact: "Contatti",
     },
     home: {
-      title: "Blocco Principale",
+      title: "Benvenuto",
       description:
-        "Benvenuti nel cuore di Aether Industries. Stiamo aprendo la strada al futuro della tecnologia di automazione con soluzioni all'avanguardia che trasformano le industrie ed elevano il potenziale umano.",
+        "In Aether Industries, stiamo aprendo la strada al futuro della tecnologia di automazione con soluzioni all'avanguardia che trasformano le industrie ed elevano il potenziale umano.",
     },
     about: {
       title: "Chi Siamo",
       subtitle: "L'Innovazione Incontra la Precisione",
       description:
-        "In Aether Industries, combiniamo decenni di esperienza ingegneristica con tecnologia di automazione all'avanguardia. La nostra missione è rivoluzionare i processi industriali attraverso soluzioni intelligenti che migliorano produttività, sicurezza e sostenibilità.",
+        "Aether Industries è stata fondata il 27 dicembre 2005 come azienda che produceva macchine per l'imballaggio dell'acqua. Durante il processo di sviluppo dei modelli più avanzati, l'adesione dei nostri primi partner ci ha dato la possibilità di pianificare i primi modelli di macchine per l'imballaggio personalizzate per i clienti che potrebbero aver bisogno di una capacità superiore a quella dei nostri modelli prodotti in serie. Da un certo punto, abbiamo iniziato ad automatizzare la nostra linea di assemblaggio con macchinari sviluppati da noi fino a poter commercializzare tali macchinari a prezzi più accessibili rispetto alla concorrenza.",
       partners: "I Nostri Partner",
     },
     products: {
@@ -351,15 +351,15 @@ export const translations = {
       contact: "お問い合わせ",
     },
     home: {
-      title: "メインブロック",
+      title: "ようこそ",
       description:
-        "Aether Industriesの中心へようこそ。私たちは、産業を変革し人間の可能性を高める最先端のソリューションで、自動化技術の未来を切り開いています。",
+        "Aether Industriesでは、産業を変革し人間の可能性を高める最先端のソリューションで、自動化技術の未来を切り開いています。",
     },
     about: {
       title: "会社概要",
       subtitle: "革新と精密の融合",
       description:
-        "Aether Industriesでは、数十年のエンジニアリング専門知識と最先端の自動化技術を組み合わせています。私たちの使命は、生産性、安全性、持続可能性を向上させるインテリジェントなソリューションを通じて、産業プロセスを革命化することです。",
+        "Aether Industriesは2005年12月27日に水包装機を製造する会社として設立されました。最も高度なモデルの開発過程で、最初のパートナーの追加により、当社の大量生産モデルよりも優れた容量を必要とする可能性のあるクライアント向けにカスタマイズされた包装機の最初のモデルを計画する可能性が得られました。ある時点から、私たちは自社で開発した機械で組立ラインを自動化し始め、競合他社よりも手頃な価格でその機械を商品化できるようになりました。",
       partners: "パートナー企業",
     },
     products: {
@@ -405,15 +405,15 @@ export const translations = {
       contact: "문의하기",
     },
     home: {
-      title: "메인 블록",
+      title: "환영합니다",
       description:
-        "Aether Industries의 중심에 오신 것을 환영합니다. 우리는 산업을 변화시키고 인간의 잠재력을 높이는 최첨단 솔루션으로 자동화 기술의 미래를 개척하고 있습니다.",
+        "Aether Industries에서 우리는 산업을 변화시키고 인간의 잠재력을 높이는 최첨단 솔루션으로 자동화 기술의 미래를 개척하고 있습니다.",
     },
     about: {
       title: "회사 소개",
       subtitle: "혁신과 정밀의 만남",
       description:
-        "Aether Industries에서는 수십 년의 엔지니어링 전문 지식과 최첨단 자동화 기술을 결합합니다. 우리의 사명은 생산성, 안전성 및 지속 가능성을 향상시키는 지능형 솔루션을 통해 산업 프로세스를 혁신하는 것입니다.",
+        "Aether Industries는 2005년 12월 27일에 물 포장 기계를 제조하는 회사로 설립되었습니다. 가장 진보된 모델의 개발 과정에서 첫 번째 파트너의 추가로 대량 생산 모델보다 더 큰 용량이 필요할 수 있는 고객을 위한 맞춤형 포장 기계의 첫 번째 모델을 계획할 수 있는 가능성을 얻었습니다. 어느 시점부터 우리는 자체 개발한 기계로 조립 라인을 자동화하기 시작했고, 경쟁사보다 저렴한 가격으로 해당 기계를 상용화할 수 있게 되었습니다.",
       partners: "파트너사",
     },
     products: {
@@ -459,15 +459,15 @@ export const translations = {
       contact: "Kontakt oss",
     },
     home: {
-      title: "Hoved Blokk",
+      title: "Velkommen",
       description:
-        "Velkommen til hjertet av Aether Industries. Vi er banebrytende for fremtiden innen automatiseringsteknologi med banebrytende løsninger som transformerer industrier og hever menneskelig potensial.",
+        "Hos Aether Industries er vi banebrytende for fremtiden innen automatiseringsteknologi med banebrytende løsninger som transformerer industrier og hever menneskelig potensial.",
     },
     about: {
       title: "Om Oss",
       subtitle: "Innovasjon Møter Presisjon",
       description:
-        "Hos Aether Industries kombinerer vi tiår med ingeniørkompetanse med banebrytende automatiseringsteknologi. Vår misjon er å revolusjonere industrielle prosesser gjennom intelligente løsninger som forbedrer produktivitet, sikkerhet og bærekraft.",
+        "Aether Industries ble grunnlagt 27. desember 2005 som et selskap som produserte vannpakkeringsmaskiner. Under utviklingsprosessen av de mest avanserte modellene ga tilslutningen av våre første partnere oss muligheten til å planlegge de første modellene av tilpassede pakkeringsmaskiner for kunder som kunne trenge en større kapasitet enn våre masseproduserte modeller. Fra et visst punkt begynte vi å automatisere vår monteringslinje med maskiner utviklet av oss selv til vi var i stand til å kommersialisere disse maskinene til mer rimelige priser enn konkurrentene.",
       partners: "Våre Partnere",
     },
     products: {
@@ -513,15 +513,15 @@ export const translations = {
       contact: "Kontakt",
     },
     home: {
-      title: "Haupt Block",
+      title: "Willkomme",
       description:
-        "Willkomme im Härz vo Aether Industries. Mir sind Pionier vo de Zuekunft vo de Automatisierigstechnologii mit modernste Lösige, wo Industrie transformiere und s menschliche Potenzial erhöhe.",
+        "Bi Aether Industries sind mir Pionier vo de Zuekunft vo de Automatisierigstechnologii mit modernste Lösige, wo Industrie transformiere und s menschliche Potenzial erhöhe.",
     },
     about: {
       title: "Über Üs",
       subtitle: "Innovation Trifft Präzision",
       description:
-        "Bi Aether Industries kombiniere mir jahrzehntelange Ingenieurkompetänz mit modernste Automatisierigstechnologii. Üsi Mission isch es, industrielli Prozäss z revolutioniere dur intelligenti Lösige, wo Produktivität, Sicherheit und Nachhaltikeit verbessere.",
+        "Aether Industries isch am 27. Dezämber 2005 als Firma gründet worde, wo Wasserverpackigsmaschine hergestellt het. Während em Entwickligsprozäss vo de fortschrittlichste Modell het üs de Biitritt vo üsne erste Partner d'Möglichkeit gäh, die erschte Modell vo kundespaziifische Verpackigsmaschine z'plane für Kunde, wo möglicherwiis e höheri Kapazität bruche als üsi Masseproduktionsmodell. Ab eme gwüsse Punkt hei mir aagfange, üsi Montagelinie mit vo üs entwicklete Maschine z'automatisiere, bis mir i de Lag gsi sind, die Maschine z'günstigere Priise als d'Konkurrenz z'vermarkte.",
       partners: "Üsi Partner",
     },
     products: {

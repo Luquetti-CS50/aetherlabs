@@ -17,7 +17,7 @@ export const Home = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.6 }}
-          className="w-full glass rounded-2xl p-12 text-center
+          className="w-full glass rounded-2xl p-6 md:p-10 lg:p-12 text-center
                      hover:scale-103 transition-transform duration-300 glow-primary"
         >
           <AnimatePresence mode="wait">
@@ -28,7 +28,7 @@ export const Home = () => {
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.3 }}
               id="home-heading"
-              className="text-4xl font-bold mb-6 text-primary"
+              className="text-3xl md:text-4xl font-bold mb-6 text-primary"
             >
               {t.home.title}
             </motion.h2>
@@ -40,7 +40,7 @@ export const Home = () => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.3, delay: 0.1 }}
-              className="text-lg text-muted-foreground leading-relaxed"
+              className="text-base md:text-lg text-muted-foreground leading-relaxed"
             >
               {t.home.description}
             </motion.p>
