@@ -19,8 +19,9 @@ export const HorizontalLanguageSelector = ({
   const measureRef = useRef<HTMLDivElement>(null);
 
   const N = languages.length;
-  const extended = [...languages, ...languages, ...languages];
-  const base = N; // bloque central
+  // 5 ciclos → siempre hay vecinos visibles a ambos lados
+  const extended = [...languages, ...languages, ...languages, ...languages, ...languages];
+  const base = 2 * N; // bloque central
 
   const [centerIndex, setCenterIndex] = useState(0);   // índice lógico 0..N-1
   const [absCenter, setAbsCenter] = useState(base);    // índice absoluto en extendido
@@ -34,17 +35,17 @@ export const HorizontalLanguageSelector = ({
   const [maxW, setMaxW] = useState<number>(120);
 
   // ===== helpers visuales =====
-  const GAP = Math.max(48, Math.min(vw * 0.04, 80)); // separador adicional
-  // Paso fijo entre CENTROS (para spacing uniforme, independientemente del ancho)
+  const GAP = Math.max(56, Math.min(vw * 0.045, 92)); // separador adicional (un toque más aire)
+  // Paso fijo entre CENTROS (spacing uniforme, independientemente del ancho)
   const STEP = (maxW || 120) + GAP;
 
-  // Fade en 70% del ancho visible + máscara suave
-  const FADE_WINDOW = (vpw || vw) * 0.70;
+  // Fade más suave y ancho (70% → 90%)
+  const FADE_WINDOW = (vpw || vw) * 0.90;
   const HALF_WIN = FADE_WINDOW / 2;
 
   const SCALE_ACTIVE = 1.16;
   const SCALE_SIDE_MIN = 0.90;
-  const OPACITY_MIN = 0.25; // más suave
+  const OPACITY_MIN = 0.45; // laterales más visibles
 
   // ===== resize =====
   useLayoutEffect(() => {
@@ -86,13 +87,20 @@ export const HorizontalLanguageSelector = ({
     }
   }, [autoRotateIndex, hasInteracted, setLanguage]);
 
-  // ===== mantener absCenter continuo (siempre el camino más corto) =====
+  // Mantener absCenter en una banda estable y camino corto
+  const clampAbs = (abs: number) => {
+    const min = base - N;
+    const max = base + N;
+    while (abs < min) abs += N;
+    while (abs > max) abs -= N;
+    return abs;
+  };
+
   useEffect(() => {
     const desired = base + centerIndex; // posición “base” equivalente
-    // elegir k tal que |desired + kN - absCenter| sea mínimo
     const k = Math.round((absCenter - desired) / N);
-    const targetAbs = desired + k * N;
-    setAbsCenter(targetAbs);
+    let targetAbs = desired + k * N;
+    setAbsCenter(clampAbs(targetAbs));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [centerIndex]);
 
@@ -104,7 +112,8 @@ export const HorizontalLanguageSelector = ({
     // elegir camino más corto desde absCenter actual
     const desired = base + index;
     const k = Math.round((absCenter - desired) / N);
-    const targetAbs = desired + k * N;
+    let targetAbs = desired + k * N;
+    targetAbs = clampAbs(targetAbs);
     setAbsCenter(targetAbs);
     setCenterIndex(index);
     setLanguage(languages[index].code);
@@ -128,14 +137,15 @@ export const HorizontalLanguageSelector = ({
 
   // ===== posiciones por CENTRO (spacing uniforme) =====
   const itemWidth = (idx: number) => (widths ? widths[idx] : 120);
+
   // centro del índice absoluto en el track
   const centerX = (absIdx: number) => {
-    const cycle = Math.floor(absIdx / N) - 1; // -1,0,1
-    const idx = ((absIdx % N) + N) % N;       // 0..N-1
-    const logicalCenter = (absIdx - base) * STEP; // centro equiespaciado
+    const cycle = Math.floor(absIdx / N) - 2; // -2,-1,0,1,2 para 5 bloques
+    const logicalCenter = (absIdx - base) * STEP;        // centro equiespaciado
     const loopOffset = cycle * (N * STEP);
     return logicalCenter + loopOffset;
   };
+
   // borde izquierdo a partir del centro
   const leftFromCenter = (absIdx: number) => {
     const idx = ((absIdx % N) + N) % N;
@@ -201,8 +211,8 @@ export const HorizontalLanguageSelector = ({
     );
   }
 
-  // Ancho del track: 3 ciclos holgados
-  const TRACK_W = 3 * N * STEP;
+  // Ancho del track: 5 ciclos holgados
+  const TRACK_W = 5 * N * STEP;
 
   return (
     <div className="relative w-full z-10">
@@ -212,11 +222,11 @@ export const HorizontalLanguageSelector = ({
         style={{
           maxWidth: "min(1200px, 92vw)",
           paddingTop: 2,
-          // Máscara suave (opcional). Si molesta el glow, comentala.
+          // Máscara suave (si querés, podés comentarla)
           WebkitMaskImage:
-            "linear-gradient(to right, rgba(0,0,0,0) 0%, rgba(0,0,0,0.25) 6%, rgba(0,0,0,1) 18%, rgba(0,0,0,1) 82%, rgba(0,0,0,0.25) 94%, rgba(0,0,0,0) 100%)",
+            "linear-gradient(to right, rgba(0,0,0,0) 0%, rgba(0,0,0,0.35) 4%, rgba(0,0,0,1) 12%, rgba(0,0,0,1) 88%, rgba(0,0,0,0.35) 96%, rgba(0,0,0,0) 100%)",
           maskImage:
-            "linear-gradient(to right, rgba(0,0,0,0) 0%, rgba(0,0,0,0.25) 6%, rgba(0,0,0,1) 18%, rgba(0,0,0,1) 82%, rgba(0,0,0,0.25) 94%, rgba(0,0,0,0) 100%)",
+            "linear-gradient(to right, rgba(0,0,0,0) 0%, rgba(0,0,0,0.35) 4%, rgba(0,0,0,1) 12%, rgba(0,0,0,1) 88%, rgba(0,0,0,0.35) 96%, rgba(0,0,0,0) 100%)",
         }}
         aria-label="Language selector"
       >
