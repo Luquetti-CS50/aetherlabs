@@ -11,115 +11,106 @@ import logo7 from "@/assets/logos/logo-7.png";
 import logo8 from "@/assets/logos/logo-8.png";
 import logo9 from "@/assets/logos/logo-9.png";
 import logo10 from "@/assets/logos/logo-10.png";
-import logo11 from "@/assets/logos/logo-11.png"; // nuevo logo
+import logo11 from "@/assets/logos/logo-11.png";
 
 const logos = [
-  { src: logo1, alt: "Partner 1" },
-  { src: logo2, alt: "Partner 2" },
-  { src: logo3, alt: "Partner 3" },
-  { src: logo4, alt: "Partner 4" },
-  { src: logo5, alt: "Partner 5" },
-  { src: logo6, alt: "Partner 6" },
-  { src: logo7, alt: "Partner 7" },
-  { src: logo8, alt: "Partner 8" },
-  { src: logo9, alt: "Partner 9" },
-  { src: logo10, alt: "Partner 10" },
-  { src: logo11, alt: "Partner 11" },
+  logo1, logo2, logo3, logo4, logo5,
+  logo6, logo7, logo8, logo9, logo10, logo11,
 ];
 
 const duplicated = [...logos, ...logos];
 
 export const LogoSlider = () => {
-  const [isPaused, setIsPaused] = useState(false);
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-
+  const [hovered, setHovered] = useState<number | null>(null);
   const controls = useAnimation();
   const dragX = useMotionValue(0);
+  const [speed, setSpeed] = useState(18); // segundos por ciclo (más bajo = más rápido)
+  const baseSpeed = 18;
   const trackRef = useRef<HTMLDivElement>(null);
 
-  // ⏩ velocidad más rápida
-  const LOOP_DURATION = 18; // segundos por ciclo
-
-  // Iniciar loop (derecha → izquierda para mantener estructura)
-  const startLoop = async () => {
+  // --- función de loop continua (izquierda → derecha)
+  const loop = async () => {
     await controls.start({
-      x: ["0%", "-50%"],
+      x: ["-50%", "0%"],
       transition: {
-        duration: LOOP_DURATION,
+        duration: speed,
         ease: "linear",
         repeat: Infinity,
       },
     });
   };
 
+  // --- start/stop controlado
   const stopLoop = () => controls.stop();
 
   useEffect(() => {
-    if (!isPaused) startLoop();
-    else stopLoop();
+    loop();
     return () => controls.stop();
-  }, [isPaused]);
+  }, [speed]);
 
-  const handlePointerDown = () => {
-    setIsPaused(true);
+  // --- velocidad dinámica (drag)
+  const handleDrag = (_: any, info: any) => {
+    const dragVelocity = info.velocity.x;
+    const dragSpeed = Math.abs(dragVelocity) / 300; // sensibilidad
+    const newSpeed = Math.max(8, Math.min(30, baseSpeed / dragSpeed));
+    setSpeed(newSpeed);
   };
 
-  const handlePointerUp = () => {
-    setIsPaused(false);
-    dragX.stop();
-    dragX.set(0);
+  const handleDragEnd = () => {
+    // vuelve gradualmente a la velocidad estable
+    let frame: number;
+    const smooth = () => {
+      setSpeed((s) => {
+        const next = s + (baseSpeed - s) * 0.05;
+        if (Math.abs(next - baseSpeed) > 0.1) frame = requestAnimationFrame(smooth);
+        return next;
+      });
+    };
+    smooth();
+    return () => cancelAnimationFrame(frame);
   };
 
   return (
     <div className="relative w-full py-8">
-      {/* Máscara para fade en bordes */}
       <div
-        className="relative w-full overflow-hidden"
+        className="relative w-full overflow-hidden px-8"
         style={{
           WebkitMaskImage:
-            "linear-gradient(to right, rgba(0,0,0,0) 0%, rgba(0,0,0,.4) 5%, rgba(0,0,0,1) 15%, rgba(0,0,0,1) 85%, rgba(0,0,0,.4) 95%, rgba(0,0,0,0) 100%)",
+            "linear-gradient(to right, rgba(0,0,0,0) 0%, rgba(0,0,0,.5) 10%, rgba(0,0,0,1) 25%, rgba(0,0,0,1) 75%, rgba(0,0,0,.5) 90%, rgba(0,0,0,0) 100%)",
           maskImage:
-            "linear-gradient(to right, rgba(0,0,0,0) 0%, rgba(0,0,0,.4) 5%, rgba(0,0,0,1) 15%, rgba(0,0,0,1) 85%, rgba(0,0,0,.4) 95%, rgba(0,0,0,0) 100%)",
-        }}
-        onMouseEnter={() => setIsPaused(true)}
-        onMouseLeave={() => {
-          setIsPaused(false);
-          setHoveredIndex(null);
+            "linear-gradient(to right, rgba(0,0,0,0) 0%, rgba(0,0,0,.5) 10%, rgba(0,0,0,1) 25%, rgba(0,0,0,1) 75%, rgba(0,0,0,.5) 90%, rgba(0,0,0,0) 100%)",
+          pointerEvents: "auto",
         }}
       >
         <motion.div
           ref={trackRef}
-          className="flex gap-14 justify-end" // alineado al borde derecho
+          className="flex gap-16 justify-start will-change-transform"
           animate={controls}
           style={{ x: dragX }}
-          drag={isPaused ? "x" : false}
+          drag="x"
           dragConstraints={{ left: -Infinity, right: Infinity }}
           dragElastic={0.1}
-          dragMomentum={false}
-          onPointerDown={handlePointerDown}
-          onPointerUp={handlePointerUp}
-          onPointerCancel={handlePointerUp}
-          onPointerLeave={(e) => {
-            if ((e as any).buttons === 0) handlePointerUp(e as any);
-          }}
+          onDrag={handleDrag}
+          onDragEnd={handleDragEnd}
         >
-          {duplicated.map((logo, index) => (
+          {duplicated.map((src, i) => (
             <motion.div
-              key={index}
-              className="relative flex-shrink-0 w-36 h-16 md:w-40 md:h-20 flex items-center justify-center cursor-pointer"
-              onMouseEnter={() => setHoveredIndex(index)}
-              onMouseLeave={() => setHoveredIndex(null)}
-              animate={{ scale: hoveredIndex === index ? 1.12 : 1 }}
+              key={i}
+              className="relative flex-shrink-0 w-36 h-16 md:w-44 md:h-20 flex items-center justify-center select-none"
+              onMouseEnter={() => setHovered(i)}
+              onMouseLeave={() => setHovered(null)}
+              animate={{ scale: hovered === i ? 1.12 : 1 }}
               transition={{ duration: 0.25 }}
             >
               <img
-                src={logo.src}
-                alt={logo.alt}
-                className="max-w-full max-h-full object-contain transition-all duration-300"
+                src={src}
+                alt={`Logo ${i + 1}`}
+                draggable={false}
+                className="max-w-full max-h-full object-contain transition-all duration-300 pointer-events-none"
                 style={{
                   filter:
-                    hoveredIndex === index
-                      ? "brightness(0) invert(1) drop-shadow(0 0 12px rgba(255,255,255,0.85))"
+                    hovered === i
+                      ? "brightness(0) invert(1) drop-shadow(0 0 16px rgba(255,255,255,0.9))"
                       : "brightness(0) invert(0.75)",
                 }}
               />
