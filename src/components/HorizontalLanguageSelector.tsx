@@ -14,7 +14,7 @@ export const HorizontalLanguageSelector = ({
 }: HorizontalLanguageSelectorProps) => {
   const { language, setLanguage } = useLanguage();
 
-  // ------- estado base / loop infinito -------
+  // ---------- loop infinito ----------
   const N = languages.length;
   const EXT = [...languages, ...languages, ...languages]; // 3 ciclos
   const BASE = N; // ciclo central
@@ -22,49 +22,57 @@ export const HorizontalLanguageSelector = ({
   const viewportRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
 
-  // índice lógico (0..N-1) y absoluto (en EXT)
-  const [centerIndex, setCenterIndex] = useState(0);
-  const [absCenter, setAbsCenter] = useState(BASE);
-
+  const [centerIndex, setCenterIndex] = useState(0); // 0..N-1
+  const [absCenter, setAbsCenter] = useState(BASE);  // índice absoluto en EXT
   const [hasInteracted, setHasInteracted] = useState(false);
 
-  // ------- responsive sizing -------
+  // ---------- responsive ----------
   const [vw, setVw] = useState<number>(
     typeof window !== "undefined" ? window.innerWidth : 1280
   );
   const isMobile = vw < 768;
 
-  // alto de carrusel y tipografías
-  const ROW_H = clamp(isMobile ? 64 : 84, 56, 96);
-  const GAP = clamp(isMobile ? vw * 0.06 : vw * 0.04, 28, 80);
-  const FONT_ACTIVE = isMobile ? "text-2xl md:text-3xl" : "text-3xl md:text-4xl";
-  const FONT_SIDE = isMobile ? "text-lg md:text-xl" : "text-xl md:text-2xl";
+  // ancho real del contenedor (para centrar perfecto en desktop)
+  const [vpw, setVpw] = useState(0);
+  useLayoutEffect(() => {
+    const onR = () => setVw(window.innerWidth);
+    window.addEventListener("resize", onR, { passive: true });
+    return () => window.removeEventListener("resize", onR);
+  }, []);
+
+  useLayoutEffect(() => {
+    if (!viewportRef.current) return;
+    const el = viewportRef.current;
+    const ro = new ResizeObserver(() => setVpw(el.clientWidth));
+    ro.observe(el);
+    setVpw(el.clientWidth);
+    return () => ro.disconnect();
+  }, []);
+
+  // alto de carrusel y tipografías (más compacto)
+  const ROW_H = clamp(isMobile ? 56 : 72, 48, 84);
+  const GAP = clamp(isMobile ? vw * 0.045 : vw * 0.03, 18, 48);
+
+  const FONT_ACTIVE = isMobile ? "text-xl md:text-2xl" : "text-2xl md:text-3xl";
+  const FONT_SIDE   = isMobile ? "text-sm md:text-base" : "text-base md:text-lg";
 
   // medimos anchos reales para spacing consistente
   const measureRef = useRef<HTMLDivElement>(null);
   const [wMax, setWMax] = useState(120);
   const [widths, setWidths] = useState<number[] | null>(null);
 
-  // paso fijo entre CENTROS (equiespaciado) independiente del ancho del label
-  const STEP = wMax + GAP;
+  // comprimimos el paso entre centros para que entren más ítems en pantalla
+  const STEP_FACTOR = isMobile ? 0.72 : 0.78;
+  const STEP = Math.round(wMax * STEP_FACTOR + GAP);
 
-  // máscara de bordes más suave
+  // máscara de bordes (suave, no corta el glow)
   const maskCSS =
-    "linear-gradient(to right, rgba(0,0,0,0) 0%, rgba(0,0,0,.28) 10%, rgba(0,0,0,1) 22%, rgba(0,0,0,1) 78%, rgba(0,0,0,.28) 90%, rgba(0,0,0,0) 100%)";
+    "linear-gradient(to right, rgba(0,0,0,0) 0%, rgba(0,0,0,.22) 8%, rgba(0,0,0,1) 20%, rgba(0,0,0,1) 80%, rgba(0,0,0,.22) 92%, rgba(0,0,0,0) 100%)";
 
-  // ------- resize -------
-  useLayoutEffect(() => {
-    const onR = () => setVw(window.innerWidth);
-    onR();
-    window.addEventListener("resize", onR, { passive: true });
-    return () => window.removeEventListener("resize", onR);
-  }, []);
-
-  // ------- medir anchos -------
+  // ---------- medir anchos ----------
   useEffect(() => {
     if (!measureRef.current) return;
-    // dejamos que el navegador pinte una vez
-    const id = setTimeout(() => {
+    const id = window.setTimeout(() => {
       const nodes = Array.from(
         measureRef.current!.querySelectorAll<HTMLElement>("[data-measure]")
       );
@@ -72,16 +80,16 @@ export const HorizontalLanguageSelector = ({
       setWidths(ws);
       setWMax(ws.length ? Math.max(...ws) : 120);
     }, 0);
-    return () => clearTimeout(id);
+    return () => window.clearTimeout(id);
   }, [vw]);
 
-  // ------- mapear idioma del contexto -> índice lógico -------
+  // ---------- mapear idioma actual -> índice lógico ----------
   useEffect(() => {
     const idx = languages.findIndex((l) => l.code === language);
     if (idx >= 0) setCenterIndex(idx);
   }, [language]);
 
-  // ------- autorrotación sólo hasta interactuar -------
+  // ---------- autorrotación hasta primera interacción ----------
   useEffect(() => {
     if (!hasInteracted && autoRotateIndex !== undefined) {
       setCenterIndex(autoRotateIndex);
@@ -89,7 +97,7 @@ export const HorizontalLanguageSelector = ({
     }
   }, [autoRotateIndex, hasInteracted, setLanguage]);
 
-  // ------- mantener absCenter continuo (camino más corto) -------
+  // ---------- mantener absCenter continuo (camino más corto) ----------
   useEffect(() => {
     const desired = BASE + centerIndex;
     const k = Math.round((absCenter - desired) / N);
@@ -98,15 +106,13 @@ export const HorizontalLanguageSelector = ({
   }, [centerIndex]);
 
   // helpers de geometría
-  const cx = (absIdx: number) => (absIdx - BASE) * STEP; // centro "geométrico"
+  const cx = (absIdx: number) => (absIdx - BASE) * STEP; // centro geométrico
   const leftFromCenter = (absIdx: number, w: number) => cx(absIdx) - w / 2;
 
-  // ------- interacción: wheel, drag táctil, snap -------
+  // ---------- interacción: wheel local, drag táctil con snap ----------
   const draggingRef = useRef(false);
   const lastX = useRef(0);
-  const accX = useRef(0); // acumulado de desplazamiento para decidir el snap
 
-  // bloqueo del scroll de página sólo cuando se usa wheel encima
   useEffect(() => {
     const el = viewportRef.current;
     if (!el) return;
@@ -124,7 +130,6 @@ export const HorizontalLanguageSelector = ({
   const onPointerDown: React.PointerEventHandler<HTMLDivElement> = (e) => {
     draggingRef.current = true;
     lastX.current = e.clientX;
-    accX.current = 0;
     e.currentTarget.setPointerCapture(e.pointerId);
     markInteracted();
   };
@@ -133,9 +138,7 @@ export const HorizontalLanguageSelector = ({
     if (!draggingRef.current) return;
     const dx = e.clientX - lastX.current;
     lastX.current = e.clientX;
-    accX.current += dx;
-
-    // convertimos desplazamiento en “medio paso” = cambio de índice suave
+    // movemos el “centro absoluto” de forma continua
     const deltaIdx = -dx / STEP;
     setAbsCenter((prev) => prev + deltaIdx);
   };
@@ -143,8 +146,7 @@ export const HorizontalLanguageSelector = ({
   const onPointerUp: React.PointerEventHandler<HTMLDivElement> = (e) => {
     draggingRef.current = false;
     e.currentTarget.releasePointerCapture(e.pointerId);
-
-    // snap al índice lógico más cercano
+    // snap al más cercano
     const nearest = Math.round(absCenter);
     const logical = mod(nearest, N);
     setAbsCenter(nearest);
@@ -168,31 +170,31 @@ export const HorizontalLanguageSelector = ({
     setLanguage(languages[index].code);
   };
 
-  // ------- visual según distancia al centro real -------
-  const viewportCenter = vw / 2;
+  // ---------- visual según distancia al centro ----------
+  const viewportCenter = (vpw || vw) / 2; // centrado real
   const trackX = viewportCenter - cx(absCenter);
 
-  // perfil de glow/opacity/scale suave
-  const FADE_WIN = vw * 0.7; // ventana de influencia (70% de ancho)
+  const FADE_WIN = (vpw || vw) * 0.8; // ventana un poco más amplia
   const HALF = FADE_WIN / 2;
   const smooth = (t: number) => {
     const x = Math.min(1, Math.max(0, t));
     return x * x * (3 - 2 * x);
   };
+
   const visuals = (absIdx: number, w: number) => {
     const distPx = Math.abs(cx(absIdx) - cx(absCenter));
     const d = smooth(distPx / HALF);
-    const opacity = 1 - (1 - 0.3) * d; // min 0.3
-    const scale = (isMobile ? 1.12 : 1.16) - (isMobile ? 0.18 : 0.26) * d;
-    const blur = 0.3 + 1.0 * d;
+    const opacity = 1 - (1 - 0.35) * d; // min 0.35
+    const scale   = (isMobile ? 1.08 : 1.12) - (isMobile ? 0.14 : 0.20) * d;
+    const blur    = 0.2 + 0.8 * d;
     const isC = distPx < 0.5;
     return { opacity, scale, blur, isC, left: leftFromCenter(absIdx, w) };
   };
 
   const glow =
-    "0 0 18px rgba(255,255,255,0.35), 0 0 36px rgba(255,255,255,0.20)";
+    "0 0 14px rgba(255,255,255,0.30), 0 0 28px rgba(255,255,255,0.16)";
 
-  // medir antes de render principal
+  // -------- pre-render de medición --------
   if (!widths) {
     return (
       <>
@@ -227,7 +229,7 @@ export const HorizontalLanguageSelector = ({
           height: ROW_H,
           WebkitMaskImage: maskCSS,
           maskImage: maskCSS,
-          touchAction: "pan-y", // móvil: permite scroll vertical + drag horizontal
+          touchAction: "pan-y", // móvil: drag horizontal sin romper el scroll vertical
         }}
         aria-label="Language selector"
         onPointerDown={onPointerDown}
@@ -243,7 +245,6 @@ export const HorizontalLanguageSelector = ({
           style={{ width: TRACK_W, willChange: "transform" }}
         >
           {EXT.map((lang, absIdx) => {
-            // ancho del label según el idioma lógico
             const logical = mod(absIdx, N);
             const w = widths![logical] ?? 120;
             const { opacity, scale, blur, isC, left } = visuals(absIdx, w);
