@@ -13,25 +13,32 @@ export const HorizontalLanguageSelector = ({
   autoRotateIndex
 }: HorizontalLanguageSelectorProps) => {
   const { language, setLanguage } = useLanguage();
+
   const viewportRef = useRef<HTMLDivElement>(null);
   const [centerIndex, setCenterIndex] = useState(0);
   const [hasInteracted, setHasInteracted] = useState(false);
 
   // medidas responsive
   const [vw, setVw] = useState<number>(typeof window !== "undefined" ? window.innerWidth : 1200);
+  const [vpw, setVpw] = useState<number>(0); // ancho real del viewport del carrusel
+
   useLayoutEffect(() => {
-    const onResize = () => setVw(window.innerWidth);
+    const onResize = () => {
+      setVw(window.innerWidth);
+      setVpw(viewportRef.current?.clientWidth || 0);
+    };
+    onResize();
     window.addEventListener("resize", onResize);
     return () => window.removeEventListener("resize", onResize);
   }, []);
 
   // map context lang -> index
   useEffect(() => {
-    const idx = languages.findIndex(l => l.code === language);
+    const idx = languages.findIndex((l) => l.code === language);
     if (idx >= 0) setCenterIndex(idx);
   }, [language]);
 
-  // autorrotación hasta que el usuario interactúe
+  // autorrotación hasta interacción
   useEffect(() => {
     if (!hasInteracted && autoRotateIndex !== undefined) {
       setCenterIndex(autoRotateIndex);
@@ -48,23 +55,35 @@ export const HorizontalLanguageSelector = ({
     setLanguage(languages[index].code);
   };
 
-  const handleWheel = (e: React.WheelEvent) => {
-    e.preventDefault();
-    const delta = e.deltaY > 0 ? 1 : -1;
-    const next = (centerIndex + delta + languages.length) % languages.length;
-    handleLanguageChange(next);
-  };
+  // Capturar la rueda sólo cuando el mouse está dentro, para que NO scrollee la página
+  useEffect(() => {
+    const el = viewportRef.current;
+    if (!el) return;
+
+    const onWheel = (e: WheelEvent) => {
+      e.preventDefault(); // bloquea scroll de la página
+      e.stopPropagation();
+      const delta = e.deltaY > 0 ? 1 : -1;
+      const next = (centerIndex + delta + languages.length) % languages.length;
+      handleLanguageChange(next);
+    };
+
+    // listener no-passive para poder preventDefault
+    el.addEventListener("wheel", onWheel, { passive: false });
+    return () => el.removeEventListener("wheel", onWheel as any);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [centerIndex]);
 
   // ===== Tuning visual =====
-  const GAP = Math.max(120, Math.min(vw * 0.16, 220)); // espaciado entre items
-  const FADE_WINDOW = vw * 0.60; // ~60% del ancho -> zona de visibilidad plena
+  const GAP = Math.max(130, Math.min(vw * 0.18, 240));       // más aire entre idiomas
+  const FADE_WINDOW = (viewportRef.current?.clientWidth || vw) * 0.60; // 60% del ancho visible
   const HALF_WIN = FADE_WINDOW / 2;
 
   const SCALE_ACTIVE = 1.16;
   const SCALE_SIDE_MIN = 0.90;
   const OPACITY_MIN = 0.35;
 
-  const SIDE_COUNT = 3; // visibles por lado (>=2)
+  const SIDE_COUNT = 3; // ≥2 visibles por lado
 
   // Loop infinito por array extendido (3x)
   const N = languages.length;
@@ -72,24 +91,24 @@ export const HorizontalLanguageSelector = ({
   const base = N; // bloque central
   const current = base + centerIndex;
 
-  // Ventana de render alrededor del centro (performance)
-  const start = Math.max(0, current - (SIDE_COUNT + 6));
-  const end = Math.min(extended.length - 1, current + (SIDE_COUNT + 6));
-  const count = end - start + 1;
+  // Ya NO recortamos con slice para evitar desalineaciones de track
+  const TOTAL = extended.length;
 
-  // Posición del track para centrar el item activo
-  const trackX = (vw / 2) - (current * GAP);
+  // Posición del track para centrar el item activo usando el centro REAL del viewport del carrusel
+  const centerPx = (vpw || vw) / 2;
+  const trackX = centerPx - current * GAP;
 
-  // Visual por item según distancia real al centro
   const getItemVisual = (absIndex: number) => {
-    const delta = absIndex - current;
-    const pixelDist = Math.abs(delta * GAP);
-    const dNorm = Math.min(1, pixelDist / HALF_WIN);          // 0 centro → 1 borde
-    const opacity = 1 - (1 - OPACITY_MIN) * dNorm;            // 1 → 0.35
+    const delta = absIndex - current;                // pasos desde el centro
+    const pixelDist = Math.abs(delta * GAP);         // distancia real en px
+    const dNorm = Math.min(1, pixelDist / HALF_WIN); // 0 centro → 1 borde ventana
+
+    const opacity = 1 - (1 - OPACITY_MIN) * dNorm;                   // 1 → 0.35
     const scale = SCALE_ACTIVE - (SCALE_ACTIVE - SCALE_SIDE_MIN) * dNorm; // 1.16 → 0.90
-    const blurPx = 0.4 + 1.4 * dNorm;                         // blur leve
+    const blurPx = 0.4 + 1.4 * dNorm;
+
     const isCentered = delta === 0;
-    const x = absIndex * GAP;                                 // posición absoluta en la pista
+    const x = absIndex * GAP;
     return { opacity, scale, blurPx, isCentered, x };
   };
 
@@ -98,7 +117,7 @@ export const HorizontalLanguageSelector = ({
     handleLanguageChange(logicalIndex);
   };
 
-  // Glow (blanco suave). Si preferís tu paleta, cambiá a cian/fucsia.
+  // Glow (blanco suave). Cambiá por paleta si querés.
   const glow = "0 0 14px rgba(255,255,255,0.38), 0 0 28px rgba(255,255,255,0.22)";
   // const glow = "0 0 14px rgba(41,255,237,.45), 0 0 26px rgba(254,76,251,.30)";
 
@@ -106,34 +125,33 @@ export const HorizontalLanguageSelector = ({
     <div className="relative w-full z-10">
       <div
         ref={viewportRef}
-        onWheel={handleWheel}
-        className="relative mx-auto h-20 flex items-center justify-center overflow-hidden"
-        style={{ maxWidth: "min(1200px, 92vw)" }}
+        // overflow-x oculto, overflow-y visible para que NO se corten por abajo
+        className="relative mx-auto h-24 flex items-center justify-center overflow-x-hidden overflow-y-visible"
+        style={{ maxWidth: "min(1200px, 92vw)", paddingTop: 2 }}
         aria-label="Language selector"
       >
         {/* TRACK que se mueve como bloque */}
         <motion.div
           className="relative h-full"
           animate={{ x: trackX }}
-          transition={{ duration: 0.3, ease: "easeOut" }}
-          style={{ width: count * GAP }}
+          transition={{ duration: 0.28, ease: "easeOut" }}
+          style={{ width: TOTAL * GAP }}
         >
-          {extended.slice(start, end + 1).map((lang, i) => {
-            const absIndex = start + i;
+          {extended.map((lang, absIndex) => {
             const { opacity, scale, blurPx, isCentered, x } = getItemVisual(absIndex);
 
             return (
               <motion.button
                 key={`${lang.code}-${absIndex}`}
-                className={`absolute top-1/2 -translate-y-1/2 whitespace-nowrap cursor-pointer ${
+                className={`absolute top-1/2 -translate-y-1/2 whitespace-nowrap cursor-pointer leading-tight ${
                   isCentered ? "text-3xl md:text-4xl font-semibold" : "text-xl md:text-2xl"
                 } text-white`}
                 onClick={() => onItemClick(absIndex)}
-                // NOTA: no animamos x por-item; lo maneja el track
+                // Importante: No animamos x por item; solo scale/opacity/blur.
                 animate={{ opacity, scale, filter: `blur(${blurPx}px)` }}
-                transition={{ duration: 0.24, ease: "easeOut" }}
+                transition={{ duration: 0.2, ease: "easeOut" }}
                 style={{
-                  left: x - start * GAP, // posición absoluta respecto al slice
+                  left: x, // posición absoluta estable
                   textShadow: isCentered ? glow : "none",
                   willChange: "transform, opacity, filter"
                 }}
