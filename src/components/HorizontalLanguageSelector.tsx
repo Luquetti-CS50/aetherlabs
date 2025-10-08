@@ -65,9 +65,10 @@ export const HorizontalLanguageSelector = ({
   const STEP_FACTOR = isMobile ? 0.72 : 0.78;
   const STEP = Math.round(wMax * STEP_FACTOR + GAP);
 
-  // máscara de bordes (suave, no corta el glow)
-  const maskCSS =
-    "linear-gradient(to right, rgba(0,0,0,0) 0%, rgba(0,0,0,.22) 8%, rgba(0,0,0,1) 20%, rgba(0,0,0,1) 80%, rgba(0,0,0,.22) 92%, rgba(0,0,0,0) 100%)";
+  // máscara de bordes (suave fade gradual en ambos lados, mobile y desktop)
+  const maskCSS = isMobile
+    ? "linear-gradient(to right, rgba(0,0,0,0) 0%, rgba(0,0,0,0.25) 10%, rgba(0,0,0,1) 25%, rgba(0,0,0,1) 75%, rgba(0,0,0,0.25) 90%, rgba(0,0,0,0) 100%)"
+    : "linear-gradient(to right, rgba(0,0,0,0) 0%, rgba(0,0,0,0.22) 8%, rgba(0,0,0,1) 20%, rgba(0,0,0,1) 80%, rgba(0,0,0,0.22) 92%, rgba(0,0,0,0) 100%)";
 
   // ---------- medir anchos ----------
   useEffect(() => {
@@ -184,9 +185,9 @@ export const HorizontalLanguageSelector = ({
   const visuals = (absIdx: number, w: number) => {
     const distPx = Math.abs(cx(absIdx) - cx(absCenter));
     const d = smooth(distPx / HALF);
-    const opacity = 1 - (1 - 0.35) * d; // min 0.35
-    const scale   = (isMobile ? 1.08 : 1.12) - (isMobile ? 0.14 : 0.20) * d;
-    const blur    = 0.2 + 0.8 * d;
+    const opacity = 1 - (1 - 0.25) * d; // min 0.25 (más visible en bordes)
+    const scale   = (isMobile ? 1.08 : 1.16) - (isMobile ? 0.14 : 0.24) * d; // más contraste en desktop
+    const blur    = isMobile ? (0.1 + 1.2 * d) : (0.2 + 0.8 * d); // más blur gradual en mobile
     const isC = distPx < 0.5;
     return { opacity, scale, blur, isC, left: leftFromCenter(absIdx, w) };
   };

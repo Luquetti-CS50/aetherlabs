@@ -77,12 +77,14 @@ export const Hero = () => {
       ref={heroRef}
       className="relative min-h-screen flex flex-col items-center justify-center px-6"
     >
-      {/* Carrusel de idiomas en el top del hero */}
-      <div className="absolute top-8 left-1/2 -translate-x-1/2 w-full px-6 flex justify-center">
-        <HorizontalLanguageSelector
-          onUserInteraction={handleUserInteraction}
-          autoRotateIndex={isAutoRotating ? currentLanguageIndex : undefined}
-        />
+      {/* Carrusel de idiomas en el top del hero - centrado perfecto */}
+      <div className="absolute top-8 w-full flex justify-center px-4">
+        <div className="w-full max-w-[1200px]">
+          <HorizontalLanguageSelector
+            onUserInteraction={handleUserInteraction}
+            autoRotateIndex={isAutoRotating ? currentLanguageIndex : undefined}
+          />
+        </div>
       </div>
 
       {/* Título con animación al cambiar idioma */}

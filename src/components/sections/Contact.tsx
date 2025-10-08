@@ -40,9 +40,9 @@ export const Contact = () => {
   };
 
   const socialLinks = [
-    { icon: Instagram, handle: "@AetherGlobal" },
-    { icon: Twitter, handle: "@Aether Global" },
-    { icon: Youtube, handle: "Aether Industries" },
+    { icon: Instagram, handle: "@industriesaether", url: "https://www.instagram.com/industriesaether?igsh=MTVma3cxZXUyeWllag==" },
+    { icon: Twitter, handle: "@GlobalAether", url: "https://x.com/GlobalAether?t=GuI0EvXH78mhsUaVJsb_Lg&s=09" },
+    { icon: Youtube, handle: "@aetherglobal", url: "https://youtube.com/@aetherglobal?si=HL8xpgH50EYSqae9" },
   ];
 
   return (
@@ -86,7 +86,9 @@ export const Contact = () => {
                   return (
                     <motion.a
                       key={index}
-                      href="#"
+                      href={social.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       initial={{ opacity: 0, y: 20 }}
                       whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true }}

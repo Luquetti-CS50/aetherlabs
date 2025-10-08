@@ -65,7 +65,7 @@ export const About = () => {
                     </linearGradient>
                   </defs>
                   <path 
-                    d="M 50 10 Q 30 30 20 50 Q 15 65 20 75 Q 25 85 35 92 Q 45 98 50 100 Q 55 98 65 92 Q 75 85 80 75 Q 85 65 80 50 Q 70 30 50 10 Z" 
+                    d="M 50 10 Q 30 30 20 50 Q 15 65 20 75 Q 25 85 35 92 Q 42 97 50 98 Q 58 97 65 92 Q 75 85 80 75 Q 85 65 80 50 Q 70 30 50 10 Z" 
                     fill="url(#dropletGradient)"
                     stroke="hsl(var(--primary))"
                     strokeWidth="1"
