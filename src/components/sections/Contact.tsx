@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { Instagram, Twitter, Youtube } from "lucide-react";
+import { Instagram, Youtube } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 export const Contact = () => {
@@ -39,16 +39,23 @@ export const Contact = () => {
     }, 1000);
   };
 
+  // SVG component for X (Twitter) icon
+  const XIcon = ({ className }: { className?: string }) => (
+    <svg viewBox="0 0 24 24" className={className} fill="currentColor">
+      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+    </svg>
+  );
+
   const socialLinks = [
     { icon: Instagram, handle: "@industriesaether", url: "https://www.instagram.com/industriesaether?igsh=MTVma3cxZXUyeWllag==" },
-    { icon: Twitter, handle: "@GlobalAether", url: "https://x.com/GlobalAether?t=GuI0EvXH78mhsUaVJsb_Lg&s=09" },
+    { icon: XIcon, handle: "@GlobalAether", url: "https://x.com/GlobalAether?t=GuI0EvXH78mhsUaVJsb_Lg&s=09" },
     { icon: Youtube, handle: "@aetherglobal", url: "https://youtube.com/@aetherglobal?si=HL8xpgH50EYSqae9" },
   ];
 
   return (
     <section
       id="contact"
-      className="min-h-screen flex items-center justify-center px-6 py-20"
+      className="min-h-screen flex items-center justify-center px-3 md:px-6 py-20"
       style={{ scrollMarginTop: "120px" }}
       aria-labelledby="contact-heading"
     >
